@@ -33,7 +33,7 @@ Notes:
 It is possible to programatically create a game tailored to automated gameplay.
 
 ```shell
-% python scripts/create_game.py -h
+% python -m scripts.create_game -h
 usage: create_game.py [-h] [--game-id GAME_ID] [--rules RULES [RULES ...]] [--deadline DEADLINE]
                       [--daide-port DAIDE_PORT] [--host HOST] [--port PORT]
 
@@ -52,12 +52,12 @@ optional arguments:
 Here's an example:
 
 ```shell
-% python scripts/create_game.py
+% python -m scripts.create_game --deadline 2
 2022-01-24 11:45:23 diplomacy.client.connection[45360] INFO Trying to connect.
 2022-01-24 11:45:23 diplomacy.client.connection[45360] INFO Connection succeeds.
 {
     "id": "mWxKLdRxp0mk9",
-    "deadline": 1,
+    "deadline": 2,
     "map_name": "standard",
     "registration_password": null,
     "rules": [
@@ -73,15 +73,15 @@ Here's an example:
 
 TBD. See contents of `launcher.sh`
 
-### Launch an ensemble of random bots
+### Launch an ensemble of random bots to play a game
 
 ```shell
-% bash launcher.sh <GAMEID>
+% bash launcher.sh mWxKLdRxp0mk9
 ```
 
-Go to the web UI, log in as administrator, find the same game ID, and join as an Omniscient observer to watch the game play out. 
+Go to the web UI, log in as administrator, find the same game ID, and join as an Omniscient observer to watch the game play out. Game logs will for each bot process will be stored under `logs/GAMEID.POWER.log`.
 
-Notes: The multi-bot launch interface is definitely going to change to accept a structured configuration that might look something like this:
+Notes: The multi-launch interface is definitely going to change to accept a structured configuration that might look something like this:
 
 ```json
 {
@@ -101,4 +101,10 @@ Notes: The multi-bot launch interface is definitely going to change to accept a 
 Containers will run processes that accept a core configuration via form of environment variables. Examples might include `HOST`, `PORT`, `POWER`, `DAIDE_PORT`, and so on. 
 
 Realistically, this is too simplistic an approach, as we will need to allow for bots that are an ensemble of containers (i.e. bot process, database process, message queue, model server, etc.) but the core concept is that the bot process will be containerized and be parameterized via environment variables.
+
+## BOTS
+
+We have a handful of demonstration bots that show the basics of connecting to a server and playing autonomously. 
+
+### Random Bot
 

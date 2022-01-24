@@ -168,34 +168,44 @@ async def launch(game_id, power_name, username, hostname, port):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "game_id",
+        "--game-id",
         type=str,
+        default=os.environ.get("DIPLO_GAMEID"),
         help="Game Id",
     )
     parser.add_argument(
-        "power_name",
+        "--power-name",
         type=str,
+        default=os.environ.get("DIPLO_POWER"),
         choices=POWERS,
         help="Power Name",
     )
     parser.add_argument(
         "--username",
         type=str,
+        default=os.environ.get("DIPLO_USERNAME"),
+        help="Client Name",
+    )
+    parser.add_argument(
+        "--password",
+        type=str,
+        default=os.environ.get("DIPLO_PASSWORD"),
         help="Client Name",
     )
     parser.add_argument(
         "--host",
         type=str,
-        default="localhost",
+        default=os.environ.get("DIPLO_HOST", "0.0.0.0"),
         help="Game Host",
     )
     parser.add_argument(
         "--port",
         type=int,
-        default=8432,
+        default=os.environ.get("DIPLO_PORT", "8432"),
         help="Game Port",
     )
     args = vars(parser.parse_args())
+    # raise SystemError(args)
     asyncio.run(
         launch(
             game_id=args["game_id"],
