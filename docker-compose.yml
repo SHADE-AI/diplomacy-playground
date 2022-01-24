@@ -1,0 +1,17 @@
+---
+version: "3.9"
+services:
+  webui:
+    build:
+      context: .
+      dockerfile: Dockerfile.webui
+    ports:
+      - "3000:3000"
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    volumes:
+      - "./data:/data:rw"
+    ports:
+      - "8432:8432"

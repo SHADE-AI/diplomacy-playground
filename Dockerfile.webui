@@ -1,0 +1,14 @@
+FROM node:16.13.2
+# Later releases (17.x+) of Node arent supported due to 
+# ERR_OSSL_EVP_UNSUPPORTED. See https://stackoverflow.com/questions/69394632/webpack-build-failing-with-err-ossl-evp-unsupported
+
+# RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+RUN apt-get update ; apt-get -y install python3-pip
+RUN git clone https://github.com/diplomacy/diplomacy.git
+WORKDIR /diplomacy
+RUN pip3 install -r requirements_dev.txt
+WORKDIR /diplomacy/diplomacy/web
+RUN npm install . ; npm install . --only=dev
+# EXPOSE 3000
+ENTRYPOINT [ "npm", "start" ]
+

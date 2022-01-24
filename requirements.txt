@@ -1,0 +1,3 @@
+diplomacy
+hashids
+python-lorem

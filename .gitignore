@@ -1,0 +1,9 @@
+.vscode/
+env/
+*.log
+data/*.json
+data/*.json.backup
+data/games/*.json
+data/games/*.json.backup
+__pycache__
+*.pyc
