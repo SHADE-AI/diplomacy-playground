@@ -102,9 +102,43 @@ Containers will run processes that accept a core configuration via form of envir
 
 Realistically, this is too simplistic an approach, as we will need to allow for bots that are an ensemble of containers (i.e. bot process, database process, message queue, model server, etc.) but the core concept is that the bot process will be containerized and be parameterized via environment variables.
 
+### Launch the same ensemble, but containerized
+
+Build container `randombot` from `./bots/random`
+
+```shell
+% ./build_random.sh
+...
+[+] Building 0.1s (10/10) FINISHED
+
+Run an ensemble of randombots to play a random Diplomacy game
+
+```shell
+% ./launcher-docker.sh AWo33q4X0W60J
+[Several containers will launch and attach to your game server]
+```
+
+You can see that both the game server and the bots are running containerized now.
+
+```shell
+% docker ps
+CONTAINER ID   IMAGE                         COMMAND                  CREATED          STATUS          PORTS                    NAMES
+1cfe5eefcbc0   randombot                     "python /code/random…"   3 minutes ago    Up 3 minutes                             amazing_elbakyan
+ab0570d0d133   randombot                     "python /code/random…"   3 minutes ago    Up 3 minutes                             epic_jennings
+717449f46fc4   randombot                     "python /code/random…"   3 minutes ago    Up 3 minutes                             sharp_cori
+8c1438845a79   randombot                     "python /code/random…"   3 minutes ago    Up 3 minutes                             priceless_mirzakhani
+3179b8c9f2f6   randombot                     "python /code/random…"   3 minutes ago    Up 3 minutes                             flamboyant_jemison
+44ccc6f8c5a6   randombot                     "python /code/random…"   3 minutes ago    Up 3 minutes                             admiring_perlman
+e19a097f7fdc   randombot                     "python /code/random…"   3 minutes ago    Up 3 minutes                             agitated_montalcini
+34f693f0f978   diplomacy-playground_server   "python -m diplomacy…"   49 minutes ago   Up 49 minutes   0.0.0.0:8432->8432/tcp   diplomacy-playground_server_1
+2455369a16d6   diplomacy-playground_webui    "npm start"              49 minutes ago   Up 49 minutes   0.0.0.0:3000->3000/tcp   diplomacy-playground_webui_1
+```
+
 ## BOTS
 
 We have a handful of demonstration bots that show the basics of connecting to a server and playing autonomously. 
 
 ### Random Bot
+
+There is a bot that performs random play in bots/random. It can be run directly or containerized.
 
