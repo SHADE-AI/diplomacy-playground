@@ -35,4 +35,6 @@ esac
 
 # Launching and sleeping forever
 echo "Launching bot..."
+
+set -x
 wine $BOT_PATH -i$BOT_HOST -p$BOT_PORT -h
