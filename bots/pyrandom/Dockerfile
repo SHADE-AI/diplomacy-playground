@@ -11,7 +11,7 @@ ENV DIPLO_PORT=8432
 ADD requirements.txt /tmp/requirements.txt
 RUN pip install -r /tmp/requirements.txt
 RUN mkdir /code
-ADD random_bot.py /code/random_bot.py
+ADD pyrandom.py /code/pyrandom.py
 
-CMD [ "python",  "/code/random_bot.py"]
+ENTRYPOINT [ "python",  "/code/pyrandom.py"]
 

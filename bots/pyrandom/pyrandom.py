@@ -54,11 +54,18 @@ def get_password(username: str, salt: str = None):
 async def play(game_id, power_name, username, hostname="localhost", port=8432):
     """Play as the specified power"""
     connection = await connect(hostname, port)
-    channel = await connection.authenticate(username, get_password(username))
+    admin_channel = await connection.authenticate("bot", "bot")
 
     # Waiting for the game, then joining it
-    while not (await channel.list_games(game_id=game_id)):
+    while not (await admin_channel.list_games(game_id=game_id)):
         await asyncio.sleep(1.0)
+    # Join game as observer to get list of uncontrolled games
+    admin_game = await admin_channel.join_game(game_id=game_id)
+    power_name = admin_game.get_random_power_name()
+
+    # Join game as selected power to play
+    username = "{0}.{1}".format(username, power_name)
+    channel = await connection.authenticate(username, get_password(username))
     game = await channel.join_game(game_id=game_id, power_name=power_name)
 
     # Playing game
@@ -80,14 +87,14 @@ async def play(game_id, power_name, username, hostname="localhost", port=8432):
             await game.set_orders(power_name=power_name, orders=orders, wait=True)
 
         # Implement random voting
-        try:
-            vote = Vote(
-                power_name=power_name, vote=random.choice(strings.ALL_VOTE_DECISIONS)
-            )
-            print("{0} vote for draw: {1}".format(power_name, vote.vote))
-            await game.vote(vote)
-        except Exception:
-            pass
+        # try:
+        #     vote = Vote(
+        #         power_name=power_name, vote=random.choice(strings.ALL_VOTE_DECISIONS)
+        #     )
+        #     print("{0} vote for draw: {1}".format(power_name, vote.vote))
+        #     await game.vote(vote)
+        # except Exception:
+        #     pass
 
         # Get extant messages for reply
         # Messages are formatted Type:Id:Message for the purposes of debugging
@@ -128,27 +135,27 @@ async def play(game_id, power_name, username, hostname="localhost", port=8432):
             )
 
         # Send the messages that are queued up
-        for msg in message_queue:
-            try:
-                power_message = game.new_power_message(msg[0], msg[1])
-                await game.send_game_message(message=power_message)
-            except exceptions.GameNotPlayingException:
-                pass
+        # for msg in message_queue:
+        #     try:
+        #         power_message = game.new_power_message(msg[0], msg[1])
+        #         await game.send_game_message(message=power_message)
+        #     except exceptions.GameNotPlayingException:
+        #         pass
 
         # Send a GLOBAL press message
-        try:
-            # Don't do it evert turn
-            if random.randrange(1, 10) == 5:
-                # For fun, use a lorem ipsum generator to make the press release!
-                global_message = game.new_global_message(
-                    "PRESS:{0}:{1}:{2}".format(
-                        message_id(), power_name, lorem.get_paragraph(1)
-                    ),
-                )
-                await game.send_game_message(message=global_message)
-        except exceptions.GameNotPlayingException:
-            # I might be able to avoid this by checking some game state variable
-            pass
+        # try:
+        #     # Don't do it evert turn
+        #     if random.randrange(1, 10) == 5:
+        #         # For fun, use a lorem ipsum generator to make the press release!
+        #         global_message = game.new_global_message(
+        #             "PRESS:{0}:{1}:{2}".format(
+        #                 message_id(), power_name, lorem.get_paragraph(1)
+        #             ),
+        #         )
+        #         await game.send_game_message(message=global_message)
+        # except exceptions.GameNotPlayingException:
+        #     # I might be able to avoid this by checking some game state variable
+        #     pass
 
         # Waiting for game to be processed
         while current_phase == game.get_current_phase():
@@ -205,14 +212,12 @@ if __name__ == "__main__":
         help="Game Port",
     )
     args = vars(parser.parse_args())
-    # raise SystemError(args)
+
     asyncio.run(
         launch(
             game_id=args["game_id"],
             power_name=args["power_name"],
-            # For now, use the power name as playername
-            # Eventually, we'll use something like the container tag
-            username=args["power_name"],
+            username=args["username"],
             hostname=args["host"],
             port=args["port"],
         )
