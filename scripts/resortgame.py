@@ -60,7 +60,7 @@ def indexMessages(messages):
             for resp in messages:
                 if message['message'] in resp['message']:
                     id=messages.index(message)
-                    messages[id]['response']=resp[]
+                    messages[id]['response']=resp['message']
     return messages
 
 def main():
