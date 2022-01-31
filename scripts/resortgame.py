@@ -18,12 +18,15 @@
 
 import json
 import argparse
+import sys
 
 def reformat(inFile,outFile):
     data=[]
-
-    with open(inFile) as file:
-        data=json.load(file)
+    if inFile == '-':
+        data=json.load(sys.stdin)
+    else:
+        with open(inFile) as file:
+            data=json.load(file)
 
     game_id=data['game_id']
     messages={}
@@ -49,9 +52,11 @@ def reformat(inFile,outFile):
         history[season]["orders"]=orders[season]
         history[season]["results"]=results[season]
         history[season]["states"]=states[season]
-
-    with open(outFile,'w+') as file:
-        json.dump(history,file,indent=2)
+    if outFile == '-':
+        json.dump(history,sys.stdout,indent=2)
+    else:
+        with open(outFile,'w+') as file:
+            json.dump(history,file,indent=2)
 
 def indexMessages(messages):
     
@@ -65,8 +70,8 @@ def indexMessages(messages):
 
 def main():
     parser = argparse.ArgumentParser(description="sort diplomacy file by season")
-    parser.add_argument('inputFileName',help="input diplomacy game json file")
-    parser.add_argument('outputFileName',help="output sorted diplomacy game json file")
+    parser.add_argument('inputFileName',help="input diplomacy game json file. - for STDIN")
+    parser.add_argument('outputFileName',help="output sorted diplomacy game json file. - for STDOUT")
     args=parser.parse_args()
     reformat(args.inputFileName,args.outputFileName)
 
