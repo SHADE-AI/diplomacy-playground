@@ -63,7 +63,9 @@ def indexMessages(messages):
     for message in messages:
         if str(message['message']).startswith("PRP ("):
             for resp in messages:
-                if message['message'] in resp['message']:
+                if message['message'] == resp['message']:
+                    continue
+                elif message['message'] in resp['message']:
                     id=messages.index(message)
                     messages[id]['response']=resp['message']
     return messages
