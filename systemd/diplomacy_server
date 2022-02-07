@@ -1,0 +1,13 @@
+/home/diplomacy/logs/diplomacy_server_run.log {
+	daily
+	rotate 30
+	compress
+	delaycompress
+	missingok
+	notifempty
+        create 0644 diplomacy diplomacy
+        postrotate
+        systemctl restart docker.diplomacy_server
+        endscript
+}
+

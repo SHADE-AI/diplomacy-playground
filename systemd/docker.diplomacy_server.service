@@ -8,6 +8,7 @@ User=diplomacy
 Group=diplomacy
 TimeoutStartSec=0
 Restart=always
+ExecStop=/usr/bin/docker stop -t 5 %n
 ExecStartPre=-/usr/bin/docker exec %n stop
 ExecStartPre=-/usr/bin/docker rm %n
 ExecStartPre=/usr/bin/docker pull tacc/diplomacy_server
