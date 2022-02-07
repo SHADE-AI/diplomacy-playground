@@ -15,7 +15,7 @@ ExecStart=/usr/bin/docker run --rm --name %n \
     -v /home/diplomacy/data:/data \
     -v /home/diplomacy/logs:/logs \
     -p 8432:8432 \
-    -p 8434:8700-8434:8700 \
+    -p 8434-8700:8434-8700 \
     -e DIPLOMACY_ADMIN_PASSWORD=tacobot \
     -e SERVER_PORT=8432 \
     -e DAIDE_PORT_RANGE=8434:8700 \
