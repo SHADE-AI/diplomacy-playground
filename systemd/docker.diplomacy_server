@@ -1,0 +1,25 @@
+[Unit]
+Description=Diplomacy Server Service
+After=docker.service
+Requires=docker.service
+
+[Service]
+User=diplomacy
+Group=diplomacy
+TimeoutStartSec=0
+Restart=always
+ExecStartPre=-/usr/bin/docker exec %n stop
+ExecStartPre=-/usr/bin/docker rm %n
+ExecStartPre=/usr/bin/docker pull tacc/diplomacy_server
+ExecStart=/usr/bin/docker run --rm --name %n \
+    -v /home/diplomacy/data:/data \
+    -v /home/diplomacy/logs:/logs \
+    -p 8432:8432 \
+    -p 8434:8700-8434:8700 \
+    -e DIPLOMACY_ADMIN_PASSWORD=tacobot \
+    -e SERVER_PORT=8432 \
+    -e DAIDE_PORT_RANGE=8434:8700 \
+    tacc/diplomacy_server
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,21 @@
+[Unit]
+Description=Diplomacy WebUI Service
+After=docker.diplomacy_server
+Requires=docker.diplomacy_server
+
+[Service]
+User=diplomacy
+Group=diplomacy
+TimeoutStartSec=0
+Restart=always
+ExecStartPre=-/usr/bin/docker exec %n stop
+ExecStartPre=-/usr/bin/docker rm %n
+ExecStartPre=/usr/bin/docker pull tacc/diplomacy_webui
+ExecStart=/usr/bin/docker run --rm --name %n \
+    -v /home/diplomacy/data:/data \
+    -v /home/diplomacy/logs:/logs \
+    -p 3000:3000 \
+    tacc/diplomacy_webui
+
+[Install]
+WantedBy=default.target
