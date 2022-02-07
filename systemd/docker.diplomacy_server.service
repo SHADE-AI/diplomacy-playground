@@ -1,5 +1,5 @@
 [Unit]
-Description=Diplomacy Server Service
+Description=Diplomacy Server
 After=docker.service
 Requires=docker.service
 
