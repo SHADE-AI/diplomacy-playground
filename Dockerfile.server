@@ -1,7 +1,19 @@
 FROM python:3.7
 
-RUN pip install diplomacy
+ARG GIT_REPO=https://github.com/SHADE-AI/diplomacy.git
+ARG GIT_BRANCH=development
 
-# EXPOSE 8432
+ENV DAIDE_PORT_RANGE=8434:8600
+ENV DIPLOMACY_ADMIN_PASSWORD=password
+ENV SERVER_PORT=8432
 
-ENTRYPOINT [ "python", "-m", "diplomacy.server.run"]
+# RUN pip install diplomacy <- public release version
+WORKDIR /code
+# Install SHADE-AI's development version
+RUN git clone ${GIT_REPO}
+WORKDIR /code/diplomacy
+RUN git checkout ${GIT_BRANCH} && pip install --upgrade .
+WORKDIR /
+RUN mkdir -p /logs && touch /logs/diplomacy.server.log
+
+CMD ["/bin/sh", "-c", "python -m diplomacy.server.run >> /logs/diplomacy_server_run.log 2>&1"]

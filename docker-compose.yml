@@ -13,7 +13,11 @@ services:
       dockerfile: Dockerfile.server
     volumes:
       - "./data:/data:rw"
+      - ".:/logs:rw"
     ports:
       - "8432:8432"
-      - "8000-8431"
-      - "8433-9000"
+      - "8434-8700:8434-8700"
+    environment:
+      - DIPLOMACY_ADMIN_PASSWORD=tacobot
+      - SERVER_PORT=8432
+      - DAIDE_PORT_RANGE=8434:8700
