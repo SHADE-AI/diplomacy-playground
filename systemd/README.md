@@ -50,7 +50,7 @@ Feb 07 14:27:58 hostname systemd[1]: Started Diplomacy Server Service.
 
 The first time the server runs, it will need to build a cache file, which can take 5-10 minutes. It will not be possible to log into the server until the cache file has been generated. Afterwards, server and game data will be stored on disk at `/home/diplomacy/data` and will not need to be regenerated. When the server has finished launching, it will be possible to connect to it via websockets on port 8432. Each active Diplomacy game will also be assigned a DAIDE server running on a port between 8434 and 8700. 
 
-The web UI should be started up at this point. You can check this with `systemctl status docker.diplomacy_webui`. You can also check it out on the web at http://<hostname>:3000. 
+The web UI should be started up at this point. You can check this with `systemctl status docker.diplomacy_webui`. You can also check it out on the web at http://$hostname:3000. 
 
 ## Logs
 

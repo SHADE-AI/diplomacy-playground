@@ -14,6 +14,8 @@ services:
     volumes:
       - "./data:/data:rw"
       - ".:/logs:rw"
+    expose:
+      - "8432"
     ports:
       - "8432:8432"
       - "8434-8700:8434-8700"
