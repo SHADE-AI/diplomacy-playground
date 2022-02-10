@@ -87,19 +87,24 @@ async def play(game_id, power_name, username, hostname="localhost", port=8432):
             await game.set_orders(power_name=power_name, orders=orders, wait=True)
 
         # Implement random voting
-        # try:
-        #     vote = Vote(
-        #         power_name=power_name, vote=random.choice(strings.ALL_VOTE_DECISIONS)
-        #     )
-        #     print("{0} vote for draw: {1}".format(power_name, vote.vote))
-        #     await game.vote(vote)
-        # except Exception:
-        #     pass
+        try:
+            vote = Vote(
+                power_name=power_name, vote=random.choice(strings.ALL_VOTE_DECISIONS)
+            )
+            print("{0} vote for draw: {1}".format(power_name, vote.vote))
+            await game.vote(vote)
+        except Exception:
+            pass
 
         # Get extant messages for reply
         # Messages are formatted Type:Id:Message for the purposes of debugging
+
         destinations = copy.copy(POWERS)
         message_queue = []
+        # game.messages.items is the list of messages that the current power
+        # can see - it includes messages originated by other powers, global
+        # messages, and messages sent by other powers in reply to a message
+        # the current power sent
         for k, v in game.messages.items():
             print(v.sender, v.recipient, v.phase, v.message)
             if v.recipient != "GLOBAL":
@@ -134,28 +139,28 @@ async def play(game_id, power_name, username, hostname="localhost", port=8432):
                 )
             )
 
-        # Send the messages that are queued up
-        # for msg in message_queue:
-        #     try:
-        #         power_message = game.new_power_message(msg[0], msg[1])
-        #         await game.send_game_message(message=power_message)
-        #     except exceptions.GameNotPlayingException:
-        #         pass
+        # Send power messages that are queued up
+        for msg in message_queue:
+            try:
+                power_message = game.new_power_message(msg[0], msg[1])
+                await game.send_game_message(message=power_message)
+            except exceptions.GameNotPlayingException:
+                pass
 
-        # Send a GLOBAL press message
-        # try:
-        #     # Don't do it evert turn
-        #     if random.randrange(1, 10) == 5:
-        #         # For fun, use a lorem ipsum generator to make the press release!
-        #         global_message = game.new_global_message(
-        #             "PRESS:{0}:{1}:{2}".format(
-        #                 message_id(), power_name, lorem.get_paragraph(1)
-        #             ),
-        #         )
-        #         await game.send_game_message(message=global_message)
-        # except exceptions.GameNotPlayingException:
-        #     # I might be able to avoid this by checking some game state variable
-        #     pass
+        # Send a GLOBAL message
+        try:
+            # Don't do it evert turn
+            if random.randrange(1, 10) == 5:
+                # For fun, use a lorem ipsum generator to make the press release!
+                global_message = game.new_global_message(
+                    "PRESS:{0}:{1}:{2}".format(
+                        message_id(), power_name, lorem.get_paragraph(1)
+                    ),
+                )
+                await game.send_game_message(message=global_message)
+        except exceptions.GameNotPlayingException:
+            # I might be able to avoid this by checking some game state variable
+            pass
 
         # Waiting for game to be processed
         while current_phase == game.get_current_phase():
