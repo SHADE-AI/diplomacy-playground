@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # Create user
-useradd -m diplomacy &&
-    usermod -aG docker diplomacy
+useradd -m shade 
+usermod -aG docker shade
 
 # Create game data and log directories
-mkdir -p /home/diplomacy/data &&
-    mkdir -p /home/diplomacy/logs &&
-    chown -R diplomacy:diplomacy /home/diplomacy
+mkdir -p /home/shade/data &&
+    mkdir -p /shade/diplomacy/logs &&
+    chown -R shade:G-824842 /home/shade
 
 # Install systemd units
 cp docker.diplomacy_server.service /etc/systemd/system &&

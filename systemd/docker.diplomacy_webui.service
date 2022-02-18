@@ -4,8 +4,8 @@ After=docker.diplomacy_server
 Requires=docker.diplomacy_server
 
 [Service]
-User=diplomacy
-Group=diplomacy
+User=shade
+Group=G-824842
 TimeoutStartSec=0
 Restart=always
 ExecStop=/usr/bin/docker stop -t 5 %n
@@ -13,8 +13,8 @@ ExecStartPre=-/usr/bin/docker exec %n stop
 ExecStartPre=-/usr/bin/docker rm %n
 ExecStartPre=/usr/bin/docker pull tacc/diplomacy_webui
 ExecStart=/usr/bin/docker run --rm --name %n \
-    -v /home/diplomacy/data:/data \
-    -v /home/diplomacy/logs:/logs \
+    -v /home/shade/data:/data \
+    -v /home/shade/logs:/logs \
     -p 3000:3000 \
     tacc/diplomacy_webui
 

@@ -4,8 +4,8 @@ After=docker.service
 Requires=docker.service
 
 [Service]
-User=diplomacy
-Group=diplomacy
+User=shade
+Group=G-824842
 TimeoutStartSec=0
 Restart=always
 ExecStop=/usr/bin/docker stop -t 5 %n
@@ -13,8 +13,8 @@ ExecStartPre=-/usr/bin/docker exec %n stop
 ExecStartPre=-/usr/bin/docker rm %n
 ExecStartPre=/usr/bin/docker pull tacc/diplomacy_server
 ExecStart=/usr/bin/docker run --rm --name %n \
-    -v /home/diplomacy/data:/data \
-    -v /home/diplomacy/logs:/logs \
+    -v /home/shade/data:/data \
+    -v /home/shade/logs:/logs \
     -p 8432:8432 \
     -p 8434-8700:8434-8700 \
     -e DIPLOMACY_ADMIN_PASSWORD=tacobot \
