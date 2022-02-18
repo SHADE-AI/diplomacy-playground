@@ -56,3 +56,8 @@ The web UI should be started up at this point. You can check this with `systemct
 
 Logs for the game server and webUI are streamed to `/home/diplomacy/logs`. They will be rotated as per the logrotate configurations bundled in this directory.
 
+## Backups
+
+The `data` and `logs` directories are backed up to the network-mounted `/corral` resource. The driver script for the backups is installed at /opt/backup.sh. The backups themselves are triggered via the `diplomacy_backup.timer` and `diplomacy_backup.service` units. 
+
+
