@@ -15,6 +15,7 @@ ExecStartPre=/usr/bin/docker pull tacc/diplomacy_server
 ExecStart=/usr/bin/docker run --rm --name %n \
     -v /home/shade/data:/data \
     -v /home/shade/logs:/logs \
+    -v /home/shade/maps:/maps \
     -p 8432:8432 \
     -p 8434-8700:8434-8700 \
     -e DIPLOMACY_ADMIN_PASSWORD=tacobot \
