@@ -1,0 +1,13 @@
+[Unit]
+Description=Back up Diplomacy server data and logs
+After=network.target
+
+[Service]
+User=shade
+Group=G-824842
+Type=oneshot
+ExecStart=/usr/bin/bash /opt/backup.sh
+
+[Install]
+WantedBy=multi-user.target
+
