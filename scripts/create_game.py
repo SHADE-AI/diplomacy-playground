@@ -26,8 +26,8 @@ async def create_game(
     game_id=None,
     rules=None,
     deadline=None,
-    password=None,
-    daide_port=None,
+    password='',
+    n_controls = 7,
     hostname="localhost",
     port=8432,
 ):
@@ -41,8 +41,8 @@ async def create_game(
         game_id=game_id,
         rules=rules,
         deadline=deadline,
-        # registration_password=password,
-        daide_port=daide_port,
+        n_controls = n_controls,
+        registration_password=password,
     )
     game_data = {
         "id": game.game_id,
@@ -50,8 +50,8 @@ async def create_game(
         "map_name": game.map_name,
         "registration_password": game.registration_password,
         "rules": game.rules,
+        "n_controls": n_controls,
         "status": game.status,
-        "daide_port": game.daide_port,
     }
     print(json.dumps(game_data, indent=4))
 
@@ -59,15 +59,16 @@ async def create_game(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--game-id", type=str, help="Game ID")
+    parser.add_argument("--game_id", type=str, help="Game ID")
     parser.add_argument("--rules", nargs="+", default=RULES, help="Game rules")
-    parser.add_argument("--deadline", type=int, default=1, help="Game deadline")
-    # parser.add_argument("--password", type=str, help="Optional game password")
-    parser.add_argument(
-        "--daide-port",
-        type=int,
-        help="Game DAIDE Port",
-    )
+    parser.add_argument("--deadline", type=int, default=0, help="Game deadline")
+    parser.add_argument("--n_controls", type=int, default=7, help="Num. of controlled powers (default 7)")
+    parser.add_argument("--password", type=str, help="Optional game password")
+    #parser.add_argument(
+    #    "--daide-port",
+    #    type=int,
+    #    help="Game DAIDE Port",
+    #)
 
     parser.add_argument(
         "--host",
@@ -88,9 +89,10 @@ if __name__ == "__main__":
             game_id=args["game_id"],
             rules=args["rules"],
             deadline=args["deadline"],
-            # password=args["password"],
+            password=args["password"],
             hostname=args["host"],
             port=args["port"],
-            daide_port=args["daide_port"],
+            n_controls = args["n_controls"],
+            #daide_port=args["daide_port"],
         )
     )
