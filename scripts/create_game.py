@@ -52,6 +52,7 @@ async def create_game(
         "rules": game.rules,
         "n_controls": n_controls,
         "status": game.status,
+        "daide_port":game.daide_port
     }
     print(json.dumps(game_data, indent=4))
 
