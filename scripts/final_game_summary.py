@@ -29,7 +29,7 @@ def print_summary(fname):
     centers = data['state_history'][last_season]['centers']
     center_string = ""
     for key in centers.keys():
-        center_string = center_string +str(len(centers[key]))+","
+        center_string = center_string +str(len(centers[key]))+"|"
     if len(center_string) != 0:
         center_string = center_string[:-1]
 
