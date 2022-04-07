@@ -34,10 +34,10 @@ def print_summary(fname):
         center_string = center_string[:-1]
 
 
-    print(data['game_id'] +"|" + controlers + '|' + data['phase'] + "|" + last_season +"|"+center_string +"|" + data['note'])
+    print(data['game_id'] +"|" + controlers + '|' + data['phase'] + "|" + last_season +"|"+center_string +"|" + str(draw) + "|" + data['note'])
 
 def print_header():
-    print("game_id|austria_controler|england_controler|france_controler|germany_controler|italy_contrler|russia_controler|turkey_contrler|game_state|last_season|austria_centers|england_centers|france_centers|germany_centers|italy_centers|russia_centers|turkey_centers|note")
+    print("game_id|austria_controler|england_controler|france_controler|germany_controler|italy_contrler|russia_controler|turkey_contrler|game_state|last_season|austria_centers|england_centers|france_centers|germany_centers|italy_centers|russia_centers|turkey_centers|is_draw|note")
 
 def main():
     parser = argparse.ArgumentParser(description="print outcome of diplomacy game")
