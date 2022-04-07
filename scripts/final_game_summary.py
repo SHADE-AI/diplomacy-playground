@@ -13,10 +13,11 @@ def print_summary(fname):
     controlers=""
     for key in data["powers"]: 
 #        controlers = controlers + key + '-'
+        controlers = controlers + "'";
         for v in data["powers"][key]['controller'].values():
             controlers = controlers +  v + '-'
         controlers = controlers[:-1] 
-        controlers = controlers +'|'
+        controlers = controlers + "',"
     controlers = controlers[:-1] 
 
     if data['phase'] != "COMPLETED":
@@ -29,23 +30,29 @@ def print_summary(fname):
     centers = data['state_history'][last_season]['centers']
     center_string = ""
     for key in centers.keys():
-        center_string = center_string +str(len(centers[key]))+"|"
+        center_string = center_string +str(len(centers[key]))+","
     if len(center_string) != 0:
         center_string = center_string[:-1]
+    note = data['note'].replace(',',' -')
 
-
-    print(data['game_id'] +"|" + controlers + '|' + data['phase'] + "|" + last_season +"|"+center_string +"|" + str(draw) + "|" + data['note'])
+    return("('"+data['game_id'] +"'"+"," + controlers + ',' + "'"+data['phase'] +"'"+ "," + "'"+last_season +"'"+","+center_string +"," + str(draw) + "," + "'"+note+"')")
 
 def print_header():
-    print("game_id|austria_controler|england_controler|france_controler|germany_controler|italy_contrler|russia_controler|turkey_contrler|game_state|last_season|austria_centers|england_centers|france_centers|germany_centers|italy_centers|russia_centers|turkey_centers|is_draw|note")
+    print("insert into test (game_id,austria_controler,england_controler,france_controler,germany_controler,italy_contrler,russia_controler,turkey_contrler,game_state,last_season,austria_centers,england_centers,france_centers,germany_centers,italy_centers,russia_centers,turkey_centers,is_draw,note) values ")
 
 def main():
     parser = argparse.ArgumentParser(description="print outcome of diplomacy game")
     parser.add_argument('inputFileNames',nargs='+',help="input diplomacy game json file. - for STDIN")
     args=parser.parse_args()
     print_header()
+    first = True
     for f in args.inputFileNames:
-        print_summary(f)
+        line = print_summary(f)
+        if not first:
+            print(','+line)
+        else:
+            print(line)
+            first=False
 
 if __name__ == "__main__":
     main()
