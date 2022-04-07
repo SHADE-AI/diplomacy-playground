@@ -20,8 +20,8 @@ def print_summary(fname):
     controlers = controlers[:-1] 
 
     if data['phase'] != "COMPLETED":
-        print("Game file not complete")
-        sys.exit(1)
+        sys.stderr.write("Game file not completed " + fname)
+        return
     draw = ',' in data['note']
 
     last_season = data['outcome'][0]
