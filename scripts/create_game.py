@@ -55,6 +55,7 @@ async def create_game(
         "daide_port":game.daide_port
     }
     print(json.dumps(game_data, indent=4))
+    return(game_data)
 
 
 if __name__ == "__main__":
