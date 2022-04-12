@@ -39,7 +39,7 @@ def new_hashid(salt=None):
 @ray.remote
 class Bot():
 
-    def __init__(self, power, game_id, host, port, name, container, opts, type='bot', use_daide_port=False):
+    def __init__(self, power, game_id, host, port, container_launcher, name, container, opts, type='bot', use_daide_port=False):
         self.type = type   #future options for human
         self.game_id = game_id
         self.power = power
@@ -52,6 +52,7 @@ class Bot():
         self.is_running = False
         self.opts = opts
         self.pid = None
+        self.container_launcher = container_launcher
 
     def launch(self):
 
@@ -66,13 +67,23 @@ class Bot():
         #           self.opts
         #        ]
 
-        command = ['docker','run','-d',self.container,
-        "--host host.docker.internal",
-        "--port %d" % self.port,
-        "--power %s" % self.power,
-        "--game_id %s" % self.game_id,
-        self.opts
-        ]
+        command = list()
+        if self.container_launcher == 'docker':
+            command = ['docker','run','-d',self.container,
+            "--host host.docker.internal",
+            "--port %d" % self.port,
+            "--power %s" % self.power,
+            "--game_id %s" % self.game_id,
+            self.opts
+            ]
+        if self.container_launcher == 'singularity':
+            command = ['singularity', 'run', self.container,
+                       "--host %s" % self.host,
+                       "--port %d" % self.port,
+                       "--power %s" % self.power,
+                       "--game_id %s" % self.game_id,
+                       self.opts
+            ]
         res = subprocess.Popen(command)
         self.pid = res.pid
 
@@ -127,7 +138,7 @@ class Game():
 
     #required: host, port, game_id, powers
     #optional: deadline, n_controls, rules, password
-    def __init__(self, host, port, working_dir, game):
+    def __init__(self, host, port, working_dir, container_launcher, game):
 
         #set by user
         self.host = host
@@ -135,6 +146,7 @@ class Game():
         self.game_id = new_hashid()
         self.powers = list()
         self.working_dir = working_dir
+        self.container_launcher = container_launcher
 
         self.deadline = 0
         self.n_controls = 7
@@ -179,7 +191,7 @@ class Game():
                 if 'use_daide_port' in temp_p:
                     use_daide_port = True
 
-                self.powers.append(Bot.remote(p, self.game_id, self.host, self.port, name, container, opts, type, use_daide_port=use_daide_port))
+                self.powers.append(Bot.remote(p, self.game_id, self.host, self.port, self.container_launcher, name, container, opts, type, use_daide_port=use_daide_port))
         else:
             logging.error("No powers specified in config")
             sys.exit(1)
@@ -262,6 +274,7 @@ class GameManager():
     def __init__(self):
 
         self.working_dir = ""
+        self.container_launcher = ""
         self.host = 'localhost'
         self.port = 8432
         self.game_list = list()
@@ -309,6 +322,12 @@ class GameManager():
                 self.working_dir = config['working_dir']
                 os.environ["WORKING_DIR"] = self.working_dir
 
+            if "container_launcher" in config:
+                self.container_launcher = config['container_launcher']
+            else:
+                #default to docker
+                self.container_launcher = 'docker'
+
             if "game_engine" in config:
                 self.host = config['game_engine']['host']
                 self.port = config['game_engine']['port']
@@ -322,7 +341,7 @@ class GameManager():
                 print("Initializing %d games" % (n_games))
 
                 for g in games:
-                    self.game_list.append(Game.remote(self.host, self.port, self.working_dir, g))
+                    self.game_list.append(Game.remote(self.host, self.port, self.working_dir, self.container_launcher, g))
 
 
             else:
@@ -350,7 +369,7 @@ if __name__ == "__main__":
     configFile = ""
     if args["config"] is None:
         #default
-        configFile = "config.json"
+        configFile = "config2.json"
     else:
         configFile = args["config"]
 

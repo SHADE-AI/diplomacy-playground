@@ -1,37 +1,38 @@
 {
   "working_dir": "/scratch/01262/jadrake/",
+  "container_launcher": "docker",
   "game_engine": {
     "host": "localhost",
     "port": 8432
   },
   "games": [
     {
-      "game_id": "dipnet_v_albert22",
+      "game_id": "test7",
       "deadline": 0,
       "n_controls": 7,
       "powers": {
-        "AUSTRIA": {"type": "bot", "name": "dipnet", "container": "docker://jad952/dipnet_sl:v3", "options": ""},
-        "ENGLAND": {"type": "bot", "name": "albert1", "container": "docker://jad952/albert-ai:v2", "options": "", "use_daide_port":"True"},
-        "FRANCE": {"type": "bot", "name": "albert2", "container": "docker://jad952/albert-ai:v2", "options": "","use_daide_port":"True"},
-        "GERMANY": {"type": "bot", "name": "albert3", "container": "docker://jad952/albert-ai:v2", "options": "","use_daide_port":"True"},
-        "ITALY": {"type": "bot", "name": "albert4", "container": "docker://jad952/albert-ai:v2", "options": "","use_daide_port":"True"},
-        "RUSSIA": {"type": "bot", "name": "albert5", "container": "docker://jad952/albert-ai:v2", "options": "","use_daide_port":"True"},
-        "TURKEY": {"type": "bot", "name": "albert6", "container": "docker://jad952/albert-ai:v2", "options": "","use_daide_port":"True"}
+        "AUSTRIA": {"type": "bot", "name": "dipnet", "container": "jad952/dipnet_sl:v3", "options": ""},
+        "ENGLAND": {"type": "bot", "name": "albert1", "container": "jad952/albert-ai:v3", "options": "", "use_daide_port":"True"},
+        "FRANCE": {"type": "bot", "name": "albert2", "container": "jad952/albert-ai:v3", "options": "","use_daide_port":"True"},
+        "GERMANY": {"type": "bot", "name": "albert3", "container": "jad952/albert-ai:v3", "options": "","use_daide_port":"True"},
+        "ITALY": {"type": "bot", "name": "albert4", "container": "jad952/albert-ai:v3", "options": "","use_daide_port":"True"},
+        "RUSSIA": {"type": "bot", "name": "albert5", "container": "jad952/albert-ai:v3", "options": "","use_daide_port":"True"},
+        "TURKEY": {"type": "bot", "name": "albert6", "container": "jad952/albert-ai:v3", "options": "","use_daide_port":"True"}
       }
     },
 
     {
-      "game_id": "dipnet_v_albert23",
+      "game_id": "test8",
       "deadline": 0,
       "n_controls": 7,
       "powers": {
-        "AUSTRIA": {"type": "bot", "name": "albert1", "container": "docker://jad952/albert-ai:v2", "options": "","use_daide_port":"True"},
-        "ENGLAND": {"type": "bot", "name": "albert2", "container": "docker://jad952/albert-ai:v2", "options": "","use_daide_port":"True"},
-        "FRANCE": {"type": "bot", "name": "dipnet", "container": "docker://jad952/dipnet_sl:v3", "options": ""},
-        "GERMANY": {"type": "bot", "name": "albert3", "container": "docker://jad952/albert-ai:v2", "options": "","use_daide_port":"True"},
-        "ITALY": {"type": "bot", "name": "albert4", "container": "docker://jad952/albert-ai:v2", "options": "","use_daide_port":"True"},
-        "RUSSIA": {"type": "bot", "name": "albert5", "container": "docker://jad952/albert-ai:v2", "options": "","use_daide_port":"True"},
-        "TURKEY": {"type": "bot", "name": "albert6", "container": "docker://jad952/albert-ai:v2", "options": "","use_daide_port":"True"}
+        "AUSTRIA": {"type": "bot", "name": "albert1", "container": "jad952/albert-ai:v3", "options": "","use_daide_port":"True"},
+        "ENGLAND": {"type": "bot", "name": "albert2", "container": "jad952/albert-ai:v3", "options": "","use_daide_port":"True"},
+        "FRANCE": {"type": "bot", "name": "dipnet", "container": "jad952/dipnet_sl:v3", "options": ""},
+        "GERMANY": {"type": "bot", "name": "albert3", "container": "jad952/albert-ai:v3", "options": "","use_daide_port":"True"},
+        "ITALY": {"type": "bot", "name": "albert4", "container": "jad952/albert-ai:v3", "options": "","use_daide_port":"True"},
+        "RUSSIA": {"type": "bot", "name": "albert5", "container": "jad952/albert-ai:v3", "options": "","use_daide_port":"True"},
+        "TURKEY": {"type": "bot", "name": "albert6", "container": "jad952/albert-ai:v3", "options": "","use_daide_port":"True"}
       }
     }
   ]
