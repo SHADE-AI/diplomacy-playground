@@ -20,6 +20,18 @@ CMD=""
 #--power [power]
 #--bot_passcode
 
+usage() {
+	
+	echo "Usage: run.sh [options]"
+	echo "--bot_name 	[dumbbot|holdbot|randbot]"
+	echo "--host 		[hostname]"
+	echo "-i		[IP_ADDRESS]"
+	echo "--port		[daide port]"
+	echo "--power		[power name]"
+	echo "--bot_passcode	[unused]"
+}
+
+
 while [ $# -gt 0 ]; do
 	case "$1" in
 		-s | --host)
@@ -49,6 +61,10 @@ while [ $# -gt 0 ]; do
 		--bot_passcode)
 			BOT_PASSCODE="$2"
 			shift 2
+		;;
+		-h | --help)
+			usage
+			exit 0
 		;;
 		*)
 			echo "Unknown option ${1}"
@@ -81,10 +97,11 @@ holdbot)
 esac
 
 # Optional - specify power to play
-if [ -n "${BOT_POWER}" ]; then BOT_POWER="-r${BOT_POWER}:${BOT_PASSCODE}"; fi
+#if [ -n "${BOT_POWER}" ]; then BOT_POWER="-r${BOT_POWER}:${BOT_PASSCODE}"; fi
 
 # Launching and sleeping forever
 echo "Launching bot..."
 set -x
 #echo $BOT_PATH -i$BOT_HOST -p$BOT_PORT ${BOT_POWER}
-$BOT_PATH $CMD ${BOT_POWER}
+#$BOT_PATH $CMD ${BOT_POWER}
+$BOT_PATH $CMD
