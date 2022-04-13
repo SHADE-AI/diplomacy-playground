@@ -90,10 +90,14 @@ do
 		   shift
 		;;
 
-		*)
-			echo "Unrecognized option '$1'"
+		-h | --help)
 			usage
 			exit 1
+		;;
+
+		*)
+			echo "Ignoring unrecognized option '$1'"
+			shift
 		;;
 		
 		:)
