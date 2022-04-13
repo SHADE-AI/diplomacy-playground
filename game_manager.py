@@ -56,6 +56,7 @@ class Bot():
 
     def launch(self):
 
+        command = list()
         if self.use_daide_port:
             self.port = self.daide_port
 
@@ -67,27 +68,34 @@ class Bot():
         #           self.opts
         #        ]
 
-        command = list()
         if self.container_launcher == 'docker':
             command = ['docker','run','-d',self.container,
-            "--host host.docker.internal",
-            "--port %d" % self.port,
-            "--power %s" % self.power,
-            "--game_id %s" % self.game_id,
+            "--host","host.docker.internal",
+            "--port", str(self.port),
+            "--power", self.power,
+            "--game_id", self.game_id,
             self.opts
             ]
         if self.container_launcher == 'singularity':
             command = ['singularity', 'run', self.container,
-                       "--host %s" % self.host,
-                       "--port %d" % self.port,
-                       "--power %s" % self.power,
-                       "--game_id %s" % self.game_id,
+                       "--host", self.host,
+                       "--port", str(self.port),
+                       "--power", self.power,
+                       "--game_id", self.game_id,
                        self.opts
             ]
+        print(command)
+        if "albert" in self.name:
+            #sleep for 20 seconds
+            print(self.name + " sleeping")
+            time.sleep(20)
         res = subprocess.Popen(command)
         self.pid = res.pid
 
-
+    def _set_daide_port(self, daide_port):
+        self.daide_port = daide_port
+        print(self.daide_port)
+        return(True)
 
 @ray.remote
 class Observer2():
@@ -215,7 +223,25 @@ class Game():
         self.daide_port = daide_port
         print("Setting DAIDE Port: " + str(self.daide_port))
         for p in self.powers:
-            p.daide_port = daide_port
+            p._set_daide_port.remote(daide_port)
+
+    def format_observer_output(self, header, game):
+        header[0] = game.get_current_phase()
+        num_units = ["n_units"]
+        num_sc = ["n_sc"]
+        num_home_sc = ["n_home_sc"]
+        vote = ["vote"]
+        goner = ["goner"]
+
+        for p in POWERS:
+            pow = game.get_power(p)
+            num_units.append(len(pow.units))
+            num_sc.append(len(pow.centers))
+            num_home_sc.append(len(pow.homes))
+            vote.append(pow.vote)
+
+        print(tabulate([num_units, num_sc, num_home_sc, vote], headers=header))
+        print('')
 
     async def observe(self):
         connection = await connect(self.host, self.port)
@@ -231,32 +257,23 @@ class Game():
         while not game.is_game_done:
             current_phase = game.get_current_phase()
 
-            header[0] = current_phase
-            num_units = ["n_units"]
-            num_sc = ["n_sc"]
-            num_home_sc = ["n_home_sc"]
-            vote = ["vote"]
-            goner = ["goner"]
+            self.format_observer_output(header, game)
 
-            for p in POWERS:
-                pow = game.get_power(p)
-                num_units.append(len(pow.units))
-                num_sc.append(len(pow.centers))
-                num_home_sc.append(len(pow.homes))
-                vote.append(pow.vote)
-                goner.append(pow.goner)
-
-            print(tabulate([num_units, num_sc, num_home_sc, goner, vote], headers=header))
-            print('')
             while current_phase == game.get_current_phase():
                 # print(power + "\t" + "Local state:"+current_phase + "\t" + "Remote:" + game.get_current_phase())
                 await asyncio.sleep(0.5)
+
+       
+        self.format_observer_output(header, game)
+        print(game.note)
+        print(game.outcome)
         #write game state file to working_dir/game_state/game_id.json
+
         outDir = self.working_dir + "/game_state/"
         if not os.path.isdir(outDir):
             os.mkdir(outDir)
             print("Created output directory " + outDir)
-        with open(outDir + self.game_id + ".json") as file:
+        with open(outDir + self.game_id + ".json","w") as file:
             file.write(json.dumps(to_saved_game_format(game)))
         return(True)
 
