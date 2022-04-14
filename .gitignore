@@ -7,5 +7,6 @@ data/games/*.json
 data/games/*.json.backup
 bots/albert/data/
 bots/dipnet_sl/*neurips*
+bots/dipnet_tf_server/*neurips*
 __pycache__
 *.pyc
