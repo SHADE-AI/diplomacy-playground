@@ -240,8 +240,8 @@ class Game():
             num_home_sc.append(len(pow.homes))
             vote.append(pow.vote)
 
-        print(tabulate([num_units, num_sc, num_home_sc, vote], headers=header))
-        print('')
+        tab = tabulate([num_units, num_sc, num_home_sc, vote], headers=header)
+        return(tab)
 
     async def observe(self):
         connection = await connect(self.host, self.port)
@@ -252,28 +252,39 @@ class Game():
         header = copy.deepcopy(POWERS)
         header.insert(0, "init")
 
+        outDir = self.working_dir + "/obs_logs/"
+        if not os.path.isdir(outDir):
+            os.mkdir(outDir)
+            print("Created output directory " + outDir)
+        outFile = outDir + self.game_id + ".log"
+        writer = open(outFile, "w")
+
 
         print("Initializing observer for game: " + self.game_id)
+        writer.write("Initializing observer for game: " + self.game_id + "\n")
         while not game.is_game_done:
             current_phase = game.get_current_phase()
 
-            self.format_observer_output(header, game)
+            writer.write(self.format_observer_output(header, game))
+            writer.write("\n\n")
 
             while current_phase == game.get_current_phase():
                 # print(power + "\t" + "Local state:"+current_phase + "\t" + "Remote:" + game.get_current_phase())
                 await asyncio.sleep(0.5)
 
        
-        self.format_observer_output(header, game)
+        writer.write(self.format_observer_output(header, game))
+        writer.write(' '.join(game.outcome))
         print(game.note)
         print(game.outcome)
+        writer.close()
         #write game state file to working_dir/game_state/game_id.json
 
-        outDir = self.working_dir + "/game_state/"
-        if not os.path.isdir(outDir):
-            os.mkdir(outDir)
-            print("Created output directory " + outDir)
-        with open(outDir + self.game_id + ".json","w") as file:
+        outDir2 = self.working_dir + "/game_state/"
+        if not os.path.isdir(outDir2):
+            os.mkdir(outDir2)
+            print("Created output directory " + outDir2)
+        with open(outDir2 + self.game_id + ".json","w") as file:
             file.write(json.dumps(to_saved_game_format(game)))
         return(True)
 
@@ -386,7 +397,7 @@ if __name__ == "__main__":
     configFile = ""
     if args["config"] is None:
         #default
-        configFile = "config2.json"
+        configFile = "scripts/config2.json"
     else:
         configFile = args["config"]
 
