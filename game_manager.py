@@ -9,6 +9,8 @@ import subprocess
 import ray
 import copy
 import os
+import setproctitle
+
 
 from tabulate import tabulate
 import argparse
@@ -164,6 +166,7 @@ class Game():
         self.status = ""
         self.daide_port = None
         #self.observer = Observer.remote(self.host, self.port, self.game_id)
+        setproctitle.setproctitle(self.game_id)
 
         if "game_id" in game:
             self.game_id = game['game_id']
@@ -199,7 +202,7 @@ class Game():
                 if 'use_daide_port' in temp_p:
                     use_daide_port = True
 
-                self.powers.append(Bot.remote(p, self.game_id, self.host, self.port, self.container_launcher, name, container, opts, type, use_daide_port=use_daide_port))
+                self.powers.append(Bot.options(name=name+"_"+self.game_id).remote(p, self.game_id, self.host, self.port, self.container_launcher, name, container, opts, type, use_daide_port=use_daide_port))
         else:
             logging.error("No powers specified in config")
             sys.exit(1)
@@ -369,7 +372,7 @@ class GameManager():
                 print("Initializing %d games" % (n_games))
 
                 for g in games:
-                    self.game_list.append(Game.remote(self.host, self.port, self.working_dir, self.container_launcher, g))
+                    self.game_list.append(Game.options(name=g['game_id']).remote(self.host, self.port, self.working_dir, self.container_launcher, g))
 
 
             else:
