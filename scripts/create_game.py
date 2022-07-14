@@ -3,6 +3,7 @@ import asyncio
 import json
 import random
 import uuid
+import sys
 from diplomacy.client.connection import connect
 from diplomacy.utils import exceptions
 from hashids import Hashids
@@ -30,6 +31,7 @@ async def create_game(
     n_controls = 7,
     hostname="localhost",
     port=8432,
+    daide_port=None
 ):
     """Creates a game on the Diplomacy server"""
     connection = await connect(hostname, port)
@@ -43,6 +45,7 @@ async def create_game(
         deadline=deadline,
         n_controls = n_controls,
         registration_password=password,
+        daide_port=daide_port
     )
     game_data = {
         "id": game.game_id,
@@ -66,11 +69,11 @@ if __name__ == "__main__":
     parser.add_argument("--deadline", type=int, default=0, help="Game deadline")
     parser.add_argument("--n_controls", type=int, default=7, help="Num. of controlled powers (default 7)")
     parser.add_argument("--password", type=str, help="Optional game password")
-    #parser.add_argument(
-    #    "--daide-port",
-    #    type=int,
-    #    help="Game DAIDE Port",
-    #)
+    parser.add_argument(
+        "--daide-port",
+        type=int,
+        help="Game DAIDE Port",
+    )
 
     parser.add_argument(
         "--host",
@@ -95,6 +98,6 @@ if __name__ == "__main__":
             hostname=args["host"],
             port=args["port"],
             n_controls = args["n_controls"],
-            #daide_port=args["daide_port"],
+            daide_port=args["daide_port"],
         )
     )
