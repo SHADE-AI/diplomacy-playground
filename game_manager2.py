@@ -145,6 +145,7 @@ class GameManager():
         print(self.game.outcome)
 
         if self.outfile is not None:
+            print("Writing game data to " + self.outfile)
             to_saved_game_format(self.game, self.outfile)
 
     def observe(self):
