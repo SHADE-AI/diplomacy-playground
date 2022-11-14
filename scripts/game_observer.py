@@ -80,7 +80,12 @@ class Observer():
         tab = tabulate([num_units, num_sc, num_home_sc, vote], headers=header)
         return(tab)
 
-    async def _observe(self):
+    def observe(self):
+
+        #print('HELLO"')
+        #obsOut = args['outdir'] + "/" + "observer_" + self.game_id + ".log"
+        #f = open(obsOut,"w")
+
         t1 = time.perf_counter()
         poll_counter = 0
         while not self.game.is_game_done:
@@ -89,25 +94,24 @@ class Observer():
             t2 = time.perf_counter()
             dt = t2 - t1
 
-            print(f"POLL: {poll_counter}   ELAPSED TIME: {dt:2.2f}")
-            print(self.format_observer_output())
-            print("\n")
-            await asyncio.sleep(self.poll_fq)
+            logging.info(f"POLL: {poll_counter}   ELAPSED TIME: {dt:2.2f}")
+            logging.info("\n"  + self.format_observer_output())
+            logging.info("\n")
+            time.sleep(self.poll_fq)
+            #await asyncio.sleep(self.poll_fq)
             #while current_phase == self.game.get_current_phase():
             #    #print("Local state:"+current_phase + "\t" + "Remote:" + self.game.get_current_phase())
             #    await asyncio.sleep(5)
 
-        print("Game completed")
-        print(self.game.note)
-        print(self.game.outcome)
+        logging.info("Game completed")
+        logging.info(self.game.note)
+        logging.info(self.game.outcome)
 
         if self.outfile is not None:
-            print("Writing game data to " + self.outfile)
+            logging.info("Writing game data to " + self.outfile)
             to_saved_game_format(self.game, self.outfile)
 
 
-    def observe(self):
-        self.loop.run_until_complete(self._observe())
 
 
 
