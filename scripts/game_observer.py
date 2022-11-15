@@ -80,7 +80,7 @@ class Observer():
         tab = tabulate([num_units, num_sc, num_home_sc, vote], headers=header)
         return(tab)
 
-    def observe(self):
+    async def _observe(self):
 
         #print('HELLO"')
         #obsOut = args['outdir'] + "/" + "observer_" + self.game_id + ".log"
@@ -97,11 +97,10 @@ class Observer():
             logging.info(f"POLL: {poll_counter}   ELAPSED TIME: {dt:2.2f}")
             logging.info("\n"  + self.format_observer_output())
             logging.info("\n")
-            time.sleep(self.poll_fq)
             #await asyncio.sleep(self.poll_fq)
-            #while current_phase == self.game.get_current_phase():
+            while current_phase == self.game.get_current_phase():
             #    #print("Local state:"+current_phase + "\t" + "Remote:" + self.game.get_current_phase())
-            #    await asyncio.sleep(5)
+                await asyncio.sleep(5)
 
         logging.info("Game completed")
         logging.info(self.game.note)
@@ -112,7 +111,8 @@ class Observer():
             to_saved_game_format(self.game, self.outfile)
 
 
-
+    def observe(self):
+        self.loop.run_until_complete(self._observe())
 
 
 if __name__ == "__main__":
