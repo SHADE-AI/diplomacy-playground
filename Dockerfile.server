@@ -7,7 +7,6 @@ ARG GIT_BRANCH=development
 RUN git clone -b ${GIT_BRANCH} ${GIT_REPO} /code/diplomacy
 RUN pip install --upgrade /code/diplomacy
 
-WORKDIR /
 RUN mkdir -p /logs && touch /logs/diplomacy.server.log
 
 ENV DAIDE_PORT_RANGE=8434:8600
